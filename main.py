@@ -14,13 +14,11 @@
 
 import logging
 # [START app]
-import random
 
 from bokeh.plotting import figure
-from bokeh.resources import CDN
-from bokeh.embed import file_html
+from bokeh.embed import components
 
-from flask import Flask, request, render_template
+from flask import Flask, request
 from stravalib.client import Client
 
 app = Flask(__name__)
@@ -28,21 +26,57 @@ app = Flask(__name__)
 client = Client()
 
 @app.route('/')
-def hello():
-    authorize_url = client.authorization_url(client_id=22031, redirect_uri='http://localhost:8080/authorized')
+@app.route('/<club_name>')
+def hello(club_name='Bweeng Trail Blazers'):
+    authorize_url = client.authorization_url(client_id=22031, redirect_uri=request.base_url)
 
-    return "<a href='" + authorize_url + "'>Click here</a>"
-
-@app.route('/authorized')
-def authorized():
     code = request.args.get('code')
-    access_token = client.exchange_code_for_token(client_id=22031, client_secret='', code=code)
+    if code:
+        access_token = client.exchange_code_for_token(client_id=22031, client_secret='', code=code)
 
-    curr_athlete = client.get_athlete().firstname
-    plot = figure()
-    plot.circle([1,2], [3,4])
-    html = file_html(plot, CDN, "my plot")
-    return html
+        clubs = client.get_athlete_clubs()
+        if len(clubs) <1:
+            return 'You are not a member of any Strava clubs'
+        try:
+            myclub = next(club for club in clubs if club.name == club_name)
+        except StopIteration:
+            return '<ul>' + ''.join('<li><a href="/' + c.name + '?code=' + code +
+                                    '">' + c.name + '</a></li>' for c in clubs) + '</ul>'
+
+        plot = figure(x_axis_label='Distance (metres)', y_axis_label='Average Speed (m/s)')
+        plot.vbar(42195,legend="Full Marathon", width=1,top=4, bottom=2,color='yellow')
+        plot.vbar(21097,legend="Half Marathon", width=1,top=4, bottom=2,color='pink')
+        plot.vbar(5000,legend="5k", width=1,top=4, bottom=2)
+        plot.vbar(6400,legend="4 Miles", width=1,top=4, bottom=2,color='green')
+        for activity in myclub.activities:
+            if activity.type == 'Run':
+                if activity.workout_type == '1':
+                    plot.circle(activity.distance.num, activity.average_speed.num,color='red',legend='Race')
+                else:
+                    plot.cross(activity.distance.num, activity.average_speed.num)
+
+        script, div = components(plot)
+        return html(script, div, myclub, clubs, code, client)
+    else:
+        return "This app requires access to Strava. <a href='" + authorize_url + "'> Click here</a> to login to Strava"
+
+def html(script, div, club, clubs, code, client):
+    htm = '''<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Bweeng Data</title>
+
+        <link rel="stylesheet" href="http://cdn.pydata.org/bokeh/release/bokeh-0.12.13.min.css" type="text/css" />
+        <script type="text/javascript" src="http://cdn.pydata.org/bokeh/release/bokeh-0.12.13.min.js"></script>''' + script + '''</head>
+        <body><h2>''' + club.name + \
+          "</h2>Distance Run v Average Speed.<p>Strava API only supplies a recent subset of all club activities<p>" + \
+          div + \
+          '<h2>' + client.get_athlete().firstname + '\'s Clubs</h2><ul>' + ''.join('<li><a href="/' + c.name + '?code=' + code +
+                             '">' + c.name + '</a></li>' for c in clubs) + '</ul>' + \
+    '''</body>
+    </html>'''
+    return htm
 
 @app.errorhandler(500)
 def server_error(e):
