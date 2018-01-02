@@ -18,7 +18,7 @@ import logging
 from bokeh.plotting import figure
 from bokeh.embed import components
 
-from flask import Flask, request
+from flask import Flask, request, render_template
 from stravalib.client import Client
 
 app = Flask(__name__)
@@ -56,7 +56,7 @@ def hello(club_name='Bweeng Trail Blazers'):
                     plot.cross(activity.distance.num, activity.average_speed.num)
 
         script, div = components(plot)
-        return html(script, div, myclub, clubs, code, client)
+        return render_template("chart.html", script=script, div=div, club=myclub, clubs=clubs, code=code, client=client)
     else:
         return "This app requires access to Strava. <a href='" + authorize_url + "'> Click here</a> to login to Strava"
 
@@ -90,5 +90,5 @@ def server_error(e):
 if __name__ == '__main__':
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host='127.0.0.1', port=8081, debug=True)
 # [END app]
