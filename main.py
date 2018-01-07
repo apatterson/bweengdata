@@ -56,27 +56,10 @@ def hello(club_name='Bweeng Trail Blazers'):
                     plot.cross(activity.distance.num, activity.average_speed.num)
 
         script, div = components(plot)
-        return render_template("chart.html", script=script, div=div, club=myclub, clubs=clubs, code=code, client=client)
+        return render_template("chart.html", script=script, plot=div, club=myclub, clubs=clubs, code=code, client=client)
     else:
         return "This app requires access to Strava. <a href='" + authorize_url + "'> Click here</a> to login to Strava"
 
-def html(script, div, club, clubs, code, client):
-    htm = '''<!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Bweeng Data</title>
-
-        <link rel="stylesheet" href="http://cdn.pydata.org/bokeh/release/bokeh-0.12.13.min.css" type="text/css" />
-        <script type="text/javascript" src="http://cdn.pydata.org/bokeh/release/bokeh-0.12.13.min.js"></script>''' + script + '''</head>
-        <body><h2>''' + club.name + \
-          "</h2>Distance Run v Average Speed.<p>Strava API only supplies a recent subset of all club activities<p>" + \
-          div + \
-          '<h2>' + client.get_athlete().firstname + '\'s Clubs</h2><ul>' + ''.join('<li><a href="/' + c.name + '?code=' + code +
-                             '">' + c.name + '</a></li>' for c in clubs) + '</ul>' + \
-    '''</body>
-    </html>'''
-    return htm
 
 @app.errorhandler(500)
 def server_error(e):
