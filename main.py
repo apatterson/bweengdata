@@ -14,9 +14,10 @@
 
 import logging
 # [START app]
-
+from bokeh.document import Document
 from bokeh.plotting import figure
 from bokeh.embed import components
+from bokeh.themes import Theme
 
 from flask import Flask, request, render_template
 from stravalib.client import Client
@@ -43,22 +44,28 @@ def hello(club_name='Bweeng Trail Blazers'):
             return '<ul>' + ''.join('<li><a href="/' + c.name + '?code=' + code +
                                     '">' + c.name + '</a></li>' for c in clubs) + '</ul>'
 
-        plot = figure(x_axis_label='Distance (metres)', y_axis_label='Average Speed (m/s)')
-        plot.vbar(42195,legend="Full Marathon", width=1,top=4, bottom=2,color='yellow')
-        plot.vbar(21097,legend="Half Marathon", width=1,top=4, bottom=2,color='pink')
-        plot.vbar(5000,legend="5k", width=1,top=4, bottom=2)
-        plot.vbar(6400,legend="4 Miles", width=1,top=4, bottom=2,color='green')
+        plot = figure(x_axis_label='Distance (metres)', y_axis_label='Average Speed (m/s)',
+                      background_fill_color="rgb(255,87,34)", sizing_mode="scale_width",
+                      outline_line_color="white")
+        for activity in myclub.activities:
+            if activity.type == 'Run':
+                if activity.workout_type != '1':
+                    plot.circle(activity.distance.num, activity.average_speed.num, color="white", alpha=0.5,
+                                radius=300)
         for activity in myclub.activities:
             if activity.type == 'Run':
                 if activity.workout_type == '1':
-                    plot.circle(activity.distance.num, activity.average_speed.num,color='red',legend='Race')
-                else:
-                    plot.cross(activity.distance.num, activity.average_speed.num)
+                    plot.circle(activity.distance.num, activity.average_speed.num, color='red', legend='Race',
+                                alpha=0.5, radius=300)
 
-        script, div = components(plot)
+        theme = Theme(filename="./theme.yaml")
+        doc = Document(theme=theme)
+        doc.add_root(plot)
+
+        script, div = components(doc)
         return render_template("chart.html", script=script, plot=div, club=myclub, clubs=clubs, code=code, client=client)
     else:
-        return "This app requires access to Strava. <a href='" + authorize_url + "'> Click here</a> to login to Strava"
+        return "This app requires access to Strava. <p><a href='" + authorize_url + "'><img src=\"static/btn_strava_connectwith_orange.png\"></img> </a>"
 
 
 @app.errorhandler(500)

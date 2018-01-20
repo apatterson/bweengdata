@@ -1,15 +1,71 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Bar charts with Bokeh!</title>
-    <link href="http://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.css" rel="stylesheet">
-    <link href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.0.min.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <title>Bweeng Data</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.deep_orange-red.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <script type="text/javascript" src="http://cdn.pydata.org/bokeh/release/bokeh-0.12.13.min.js"></script>
+    {{ script|safe }}
 </head>
-<body>
-<h1>Bugs found over the past {{ bars_count }} days</h1>
-{{ the_div|safe }}
-<script src="http://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.js"></script>
-<script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.5.min.js"></script>
-{{ the_script|safe }}
+
+<style>
+
+    html, body {
+        font-family: 'Roboto', 'Helvetica', sans-serif;
+    }
+
+</style>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+            <!-- Title -->
+            <span class="mdl-layout-title"><img src="{{ club.profile_medium  }}"
+                                                               width="30px" height="30px"> {{ club.name }}</span>
+            <!-- Add spacer, to align navigation to the right -->
+            <div class="mdl-layout-spacer"></div>
+            <!-- Navigation. We hide it in small screens. -->
+            <nav class="mdl-navigation mdl-layout--large-screen-only">
+                {% for c in clubs %}
+                <a class="mdl-navigation__link" href="{{ c.name }}?code={{ code }}">{{ c.name }}</a>
+                {% endfor %}
+            </nav>
+        </div>
+    </header>
+    <div class="mdl-layout__drawer">
+        <span class="mdl-layout-title">Title</span>
+        <nav class="mdl-navigation">
+            {% for c in clubs %}
+            <a class="mdl-navigation__link" href="{{ c.name }}?code={{ code }}">{{ c.name }}</a>
+            {% endfor %}
+        </nav>
+    </div>
+    <main class="mdl-layout__content">
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--4-col mdl-card mdl-shadow--2dp bweeng-card-text">
+                <div class="mdl-card__title">Distance Run v Average Speed</div>
+                <div class="mdl-card__supporting-text">
+                    {{ club.name }} is a {{ club.sport_type  }} club based in {{ club.city }}, {{ club.country  }}.
+                    It has {{ club.member_count }} active members.
+                </div>
+            </div>
+            <div class="mdl-cell mdl-cell--1-col">
+            </div>
+            <div class="mdl-cell mdl-cell--6-col mdl-card mdl-shadow--2dp bweeng-plot">
+                {{ plot|safe }}
+            </div>
+        </div>
+    </main>
+    <footer class="mdl-mini-footer">
+    <div class="mdl-mini-footer__left-section">
+        <div class="mdl-logo"><a href="http://www.strava.com"><img src="static/api_logo_pwrdBy_strava_stack_light.png" height="40px"></img></a></div>
+        <ul class="mdl-mini-footer__link-list">
+            <li><a href="https://github.com/apatterson/bweengdata">Source</a></li>
+        </ul>
+    </div>
+</footer>
+</div>
 </body>
 </html>
