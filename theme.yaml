@@ -1,0 +1,7 @@
+attrs:
+    Figure:
+        border_fill_color: 'rgb(255,87,34)'
+        border_fill_alpha: 0.5
+        sizing_mode: 'scale_width'
+    Axis:
+        visible: False
