@@ -26,6 +26,7 @@ from stravalib.client import Client
 app = Flask(__name__)
 
 client = Client()
+strava_client_secret = os.environ['STRAVA_CLIENT_SECRET']
 
 @app.route('/')
 @app.route('/<club_name>')
@@ -34,7 +35,7 @@ def hello(club_name='Bweeng Trail Blazers'):
 
     code = request.args.get('code')
     if code:
-        access_token = client.exchange_code_for_token(client_id=22031, client_secret='', code=code)
+        access_token = client.exchange_code_for_token(client_id=22031, client_secret=strava_client_secret, code=code)
 
         clubs = client.get_athlete_clubs()
         me = client.get_athlete()
