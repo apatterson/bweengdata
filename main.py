@@ -14,6 +14,7 @@
 
 import logging
 import os
+import time
 # [START app]
 from bokeh.models import ColumnDataSource, LabelSet, FixedTicker, Grid
 from bokeh.plotting import figure
