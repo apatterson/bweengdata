@@ -61,7 +61,7 @@ def hello(club_name='Bweeng Trail Blazers'):
                 radius = 500
             if activity.type == 'Run':
                 if activity.workout_type != '1' and activity.distance.num > 1000:
-                    plot.circle(activity.distance.num, activity.average_speed, color="white", alpha=0.5,
+                    plot.circle(activity.distance.num, activity.average_speed.num, color="white", alpha=0.5,
                                 size=30)
         for activity in myclub.activities:
             if activity.type == 'Run':
