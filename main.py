@@ -56,29 +56,24 @@ def hello(club_name='Bweeng Trail Blazers'):
         plot = figure()
 
         for activity in myclub.activities:
-            print(activity)      
-            activity_detailed = client.get_activity(activity.id)
-            print(activity_detailed.distance)
-            print(activity_detailed.average_speed)
             radius = 300
             if activity.athlete.id == me.id:
                 radius = 500
             if activity.type == 'Run':
                 if activity.workout_type != '1' and activity.distance.num > 1000:
-                    plot.circle(activity.distance.num, activity_detailed.average_speed.num, color="white", alpha=0.5,
+                    plot.circle(activity.distance.num, activity_detailed.elapsed_time.num, color="white", alpha=0.5,
                                 size=30)
         for activity in myclub.activities:
             if activity.type == 'Run':
                 if activity.workout_type == '1' and activity.distance.num > 1000:
-                    plot.circle(activity.distance.num, activity.average_speed, color='red', legend='Race',
+                    plot.circle(activity.distance.num, activity.elapsed_time.num, color='red', legend='Race',
                                 alpha=0.5, size=30)
                     
         for activity in myclub.activities:
-            print(activity)
             if activity.type == 'Run':
                 if activity.distance.num > 1000:
                     if activity.athlete.id == me.id:
-                        plot.triangle(activity.distance.num, activity.average_speed, legend='Me',
+                        plot.triangle(activity.distance.num, activity.elapsed_time.num, legend='Me',
                                    size=15, color='grey', line_width=3)
 
         plot.xgrid[0].ticker = FixedTicker(ticks=[5000, 8000, 10000, 16000, 21097, 42195])
