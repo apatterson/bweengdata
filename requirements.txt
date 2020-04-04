@@ -1,4 +1,4 @@
-Flask==0.12.2
+Flask==1.0
 gunicorn==19.7.1
 bokeh==0.12.13
 stravalib==0.7.0
