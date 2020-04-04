@@ -57,6 +57,8 @@ def hello(club_name='Bweeng Trail Blazers'):
 
         for activity in myclub.activities:
             print(activity)
+            print(activity.distance)
+            print(activity.average_speed)
             radius = 300
             if activity.athlete.id == me.id:
                 radius = 500
