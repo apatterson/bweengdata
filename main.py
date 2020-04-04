@@ -70,7 +70,7 @@ def hello(club_name='Bweeng Trail Blazers'):
                                 alpha=0.5, size=30)
                     
         for activity in myclub.activities:
-            print activity
+            print(activity)
             if activity.type == 'Run':
                 if activity.distance.num > 1000:
                     if activity.athlete.id == me.id:
