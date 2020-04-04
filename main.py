@@ -37,7 +37,7 @@ def hello(club_name='Bweeng Trail Blazers'):
     code = request.args.get('code')
     if code:
         # Extract the code from your webapp response
-        token_response = client.exchange_code_for_token(client_id=1234, client_secret=strava_client_secret, code=code)
+        token_response = client.exchange_code_for_token(client_id=22031, client_secret=strava_client_secret, code=code)
         access_token = token_response['access_token']
         refresh_token = token_response['refresh_token']
         expires_at = token_response['expires_at']
@@ -54,7 +54,7 @@ def hello(club_name='Bweeng Trail Blazers'):
 
         # ... time passes ...
         if time.time() > client.token_expires_at:
-            refresh_response = client.refresh_access_token(client_id=1234, client_secret=strava_client_secret,
+            refresh_response = client.refresh_access_token(client_id=22031, client_secret=strava_client_secret,
                                                            refresh_token=client.refresh_token)
             access_token = refresh_response['access_token']
             refresh_token = refresh_response['refresh_token']
