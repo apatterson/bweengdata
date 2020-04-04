@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import logging
+import os
 # [START app]
 from bokeh.models import ColumnDataSource, LabelSet, FixedTicker, Grid
 from bokeh.plotting import figure
