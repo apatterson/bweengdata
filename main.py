@@ -114,7 +114,7 @@ def hello(club_name='Bweeng Trail Blazers'):
         return render_template("chart.html", script=script, plot=div, club=myclub, clubs=clubs, code=code, client=client)
     else:
         return "This app requires access to Strava. <p><a href='" + authorize_url + "'><img src=\"static/btn_strava_connectwith_orange.png\"></img></a><p><a href=\"https://www.rathduffoutofschool.ie\">Rathduff OOSS</a><p>"
-"
+
 
 
 @app.errorhandler(500)
