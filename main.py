@@ -56,15 +56,16 @@ def hello(club_name='Bweeng Trail Blazers'):
         plot = figure()
 
         for activity in myclub.activities:
-            print(activity)
-            print(activity.distance)
-            print(activity.average_speed)
+            print(activity)      
+            activity_detailed = client.get_activity(activity.id)
+            print(activity_detailed.distance)
+            print(activity_detailed.average_speed)
             radius = 300
             if activity.athlete.id == me.id:
                 radius = 500
             if activity.type == 'Run':
                 if activity.workout_type != '1' and activity.distance.num > 1000:
-                    plot.circle(activity.distance.num, activity.average_speed, color="white", alpha=0.5,
+                    plot.circle(activity.distance.num, activity_detailed.average_speed.num, color="white", alpha=0.5,
                                 size=30)
         for activity in myclub.activities:
             if activity.type == 'Run':
